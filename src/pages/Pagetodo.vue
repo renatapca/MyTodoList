@@ -1,6 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md absolute full-width full-height column">
+      <template v-if="tasksDownloaded">
       <div class="row q-mb-lg">
           <search></search>
           <sort></sort>
@@ -31,6 +32,17 @@
             icon="add"
         />
           </div>
+      </template>
+
+      <template v-else>
+        <span class="absolute-center">
+          <q-spinner
+            color="primary"
+            size="3em"
+          />
+        </span>
+      </template>
+
     </div>
     <q-dialog
     v-model="showAddTask">
@@ -38,6 +50,7 @@
     </q-dialog>
   </q-page>
 </template>
+
 <script>
 import { mapGetters, mapState } from 'vuex'
 export default {
@@ -49,7 +62,7 @@ export default {
   computed: {
     ...mapGetters('tasks', ['tasksTodo', 'tasksCompleted']),
     ...mapGetters('settings', ['settings']),
-    ...mapState('tasks', ['search'])
+    ...mapState('tasks', ['search', 'tasksDownloaded'])
   },
   mounted () {
     this.$root.$on('showAddTask', () => {

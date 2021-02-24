@@ -25,6 +25,24 @@ export default function (/* { store, ssrContext } */) {
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
   })
+  const originalPush = VueRouter.prototype.push
+  VueRouter.prototype.push = function push (location, onResolve, onReject) {
+    if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+    try {
+      return originalPush.call(this, location).catch(err => err)
+    } catch (error) {
+      console.warn('VueRouter.prototype.push error->', error)
+    }
+  }
+  const originalReplace = VueRouter.prototype.replace
+  VueRouter.prototype.replace = function replace (location, onResolve, onReject) {
+    if (onResolve || onReject) return originalReplace.call(this, location, onResolve, onReject)
+    try {
+      return originalReplace.call(this, location).catch(err => err)
+    } catch (error) {
+      console.warn('VueRouter.prototype.replace error->', error)
+    }
+  }
 
   return Router
 }

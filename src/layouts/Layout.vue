@@ -4,14 +4,24 @@
       <q-toolbar>
 
         <q-toolbar-title class="absolute-center">
-          To do List
+          Awesome Todo
         </q-toolbar-title>
+
         <q-btn
-        to="auth"
-        flat
-        icon-right="account_circle"
-        label="Login"
-        class="absolute-right"></q-btn>
+          v-if="!loggedIn"
+          to="/auth"
+          flat
+          icon-right="account_circle"
+          label="Login"
+          class="absolute-right" />
+
+        <q-btn
+          v-else
+          @click="logoutUser"
+          flat
+          icon-right="account_circle"
+          label="Logout"
+          class="absolute-right" />
 
       </q-toolbar>
     </q-header>
@@ -53,6 +63,7 @@
         </q-item>
       </q-list>
     </q-drawer>
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -60,7 +71,9 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import { openURL } from 'quasar'
+
 export default {
   name: 'MyLayout',
   data () {
@@ -80,7 +93,11 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState('auth', ['loggedIn'])
+  },
   methods: {
+    ...mapActions('auth', ['logoutUser']),
     openURL
   }
 }
